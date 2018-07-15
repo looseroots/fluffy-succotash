@@ -5,6 +5,13 @@ import os
 import random
 import datetime
 
+
+@app.before_request
+def pick_nav_emoji():
+    if session.new:
+        session['nav_emoji'] = random.choice(app.config['NAVBAR_EMOJIS'])
+        print(session['nav_emoji'], 'weiner')
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     home_form = HomeForm()
@@ -17,7 +24,6 @@ def index():
 
     return render_template(
         'index.html',
-        navbar_emoji=random.choice(app.config['NAVBAR_EMOJIS']),
         home_form=home_form
     )
 
