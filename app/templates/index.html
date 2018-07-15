@@ -2,16 +2,6 @@
 {% import "macros.html" as macros %}
 {% block content %}
 
-{% if home_form.errors %}
-    <ul class="errors">
-        {% for name, errors in home_form.errors|dictsort if errors %}
-            {% for error in errors %}
-                <li> {{ home_form[name].label }}: {{ error }}</li>
-            {% endfor %}
-        {% endfor %}
-    </ul>
-{% endif %}
-
 <div class="row" style="padding-top: 30px;">
 <div class="col-1"></div>
 <div class="col-10">
@@ -25,8 +15,18 @@
         cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
         proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
 
+        <!--
+        <img src="{{ url_for('static', filename='package/build/svg/calendar.svg') }}">
+        -->
+
         {% call macros.render_form(home_form, action_text='Start your Plan', btn_class='btn btn-primary btn-block') %}
-            {{ macros.render_field(home_form.location, label_visible=false, placeholder="Your location")}}
+            {{ macros.render_field(home_form.start_location, label_visible=false, placeholder="Starting Location")}}
+
+            {{ macros.render_field(home_form.end_location, label_visible=false, placeholder="Ending Location")}}
+
+            {{ macros.render_field(home_form.start_time, label_visible=false, placeholder="Start Time")}}
+
+            {{ macros.render_field(home_form.end_time, label_visible=false, placeholder="End Time")}}
         {% endcall %}
     </div>
 </div>
