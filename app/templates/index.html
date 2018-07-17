@@ -8,12 +8,7 @@
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
         <h1 class="display-4">Make a Plan</h1>
-        <p class="lead"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
+        <p class="lead">Timespent helps you find things to do. Tell us a little bit about yourself and we'll fill your day with things you'll want to brag to your friends about.</p>
 
         <!--
         <img src="{{ url_for('static', filename='package/build/svg/calendar.svg') }}">
@@ -24,9 +19,12 @@
 
             {{ macros.render_field(home_form.end_location, label_visible=false, placeholder="Ending Location")}}
 
-            {{ macros.render_field(home_form.start_time, label_visible=false, placeholder="Start Time")}}
+            {{ macros.render_field(home_form.start_date, label_visible=false,
+            placeholder="Story Date")}}
 
-            {{ macros.render_field(home_form.end_time, label_visible=false, placeholder="End Time")}}
+            {{ macros.render_field(home_form.start_time, label_visible=false )}}
+
+            {{ macros.render_field(home_form.end_time, label_visible=false )}}
         {% endcall %}
     </div>
 </div>
@@ -40,36 +38,12 @@
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
         <h1 class="display-4">What is it?</h1>
-        <p class="lead"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
+        <p class="lead">Timespent's goal is to help people find activities that suit their interests. Have you ever wanted to meet a friend or go on a date, but not been able to find something that everyone involved wants to do? Timespent solves that problem by learning what types of things interest you and your friends and are within your budget.</p>
     </div>
 </div>
 </div>
 <div class="col-1"></div>
 </div>
-
-<div class="row">
-<div class="col-1"></div>
-<div class="col-10">
-<div class="jumbotron jumbotron-fluid">
-    <div class="container">
-        <h1 class="display-4">What do I do with it?</h1>
-        <p class="lead"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
-    </div>
-</div>
-</div>
-<div class="col-1"></div>
-</div>
-
 
 
 {% endblock %}

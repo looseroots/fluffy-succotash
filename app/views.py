@@ -1,16 +1,15 @@
 from flask import (redirect, url_for, render_template, flash, g, request, session)
-from app import app
 from app.forms import HomeForm
-import os
-import random
+from app import app
 import datetime
+import random
+import os
 
 
 @app.before_request
 def pick_nav_emoji():
-    if session.new:
+    if 'nav_emoji' not in session.keys():
         session['nav_emoji'] = random.choice(app.config['NAVBAR_EMOJIS'])
-        print(session['nav_emoji'], 'weiner')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -19,8 +18,8 @@ def index():
         home_form = [home_form.start_location.data,home_form.end_location.data, home_form.start_time.data, home_form.end_time.data]
         home_form = [str(field) for field in home_form]
         session['home_form'] = home_form
-        print(session['home_form'])
         return redirect(url_for('planner'))
+
 
     return render_template(
         'index.html',
@@ -29,8 +28,6 @@ def index():
 
 @app.route('/planner', methods=['GET', 'POST'])
 def planner():
-    print(session['home_form'])
-
     return render_template(
         'planner.html',
         start_location=session['home_form'][0],
