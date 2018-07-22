@@ -20,7 +20,6 @@ def index():
         session['home_form'] = home_form
         return redirect(url_for('planner'))
 
-
     return render_template(
         'index.html',
         home_form=home_form

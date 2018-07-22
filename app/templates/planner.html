@@ -1,7 +1,60 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>{{ start_location }}</h1>
-    <h1>{{ end_location }}</h1>
-    <h1>{{ start_time }}</h1>
-    <h1>{{ end_time }}</h1>
+    <div id="map" style="height: 400px; width: 400px;"></div>
+    <script>
+var geocoder;
+var map;
+var directionsService;
+var directionsDisplay;
+var start_add = "{{ start_location | safe }}";
+var start_coords;
+var end_add = "{{ end_location | safe }}";
+var end_coords;
+
+
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {zoom: 4, center: {lat: -34.397, lng: 150.644}});
+
+    directionsService = new google.maps.DirectionsService();
+    directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay.setMap(map);
+
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode( {'address': start_add}, function(results, status) {
+        start_coords = geocoderCallback(results, status);
+        map.setCenter(start_coords);
+        map.setZoom(10);
+    });
+    geocoder.geocode( {'address': end_add}, function(results, status) {
+        end_coords = geocoderCallback(results, status);
+        displayDirections();
+    });
+}
+
+function geocoderCallback(results, status) {
+    if (status != 'OK') {
+        console.log("Geocode failed because " + status);
+        return null;
+    }
+    
+    return results[0].geometry.location;
+}
+
+function displayDirections() {
+    var request = {
+        origin: start_coords,
+        destination: end_coords,
+        travelMode: google.maps.TravelMode["DRIVING"]
+    }
+    directionsService.route(request, function(response, status) {
+        if (status == 'OK') {
+            directionsDisplay.setDirections(response);
+        }
+    });
+}
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC94G_D29MnwKOepVNsTOqfu99PYtlcuAU&callback=initMap">
+    </script>
+
 {% endblock %}
