@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-    <div id="map" style="height: 400px; width: 400px;"></div>
-    <script>
+
+<style>
+    .structure {
+        margin: auto;
+        width: 100%;
+        padding: 10px;
+    }
+</style>
+
+<script>
 var geocoder;
 var map;
 var directionsService;
@@ -52,9 +60,14 @@ function displayDirections() {
         }
     });
 }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC94G_D29MnwKOepVNsTOqfu99PYtlcuAU&callback=initMap">
-    </script>
+</script>
+   
+<div class="structure">
+    <div id="map" style="height: 700px; width: 800px;">
+        <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC94G_D29MnwKOepVNsTOqfu99PYtlcuAU&callback=initMap">
+        </script>
+    </div>
+</div>
 
 {% endblock %}
