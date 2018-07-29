@@ -1,49 +1,197 @@
 {% extends "base.html" %}
-{% import "macros.html" as macros %}
 {% block content %}
 
 <div class="row" style="padding-top: 30px;">
 <div class="col-1"></div>
-<div class="col-10">
-<div class="jumbotron jumbotron-fluid">
-    <div class="container">
-        <h1 class="display-4">Make a Plan</h1>
-        <p class="lead">Timespent helps you find things to do. Tell us a little bit about yourself and we'll fill your day with things you'll want to brag to your friends about.</p>
-
-        <!--
-        <img src="{{ url_for('static', filename='package/build/svg/calendar.svg') }}">
-        -->
-
-        {% call macros.render_form(home_form, action_text='Start your Plan', btn_class='btn btn-primary btn-block') %}
-            {{ macros.render_field(home_form.start_location, label_visible=false, placeholder="Starting Location")}}
-
-            {{ macros.render_field(home_form.end_location, label_visible=false, placeholder="Ending Location")}}
-<!-- 
-            {{ macros.render_field(home_form.start_date, label_visible=false,
-            placeholder="Story Date")}}
-
-            {{ macros.render_field(home_form.start_time, label_visible=false )}}
-
-            {{ macros.render_field(home_form.end_time, label_visible=false )}} -->
-        {% endcall %}
+<div class="col-5">
+    <!-- because bootstrap uses border-radius: 6px; for jumbotrons -->
+    <div id="map" style="border-radius: 6px;">
+        <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC94G_D29MnwKOepVNsTOqfu99PYtlcuAU&callback=initMap">
+        </script>
     </div>
 </div>
+<div class="col-5">
+    <div class="jumbotron" id="next-to-map">
+        <h1>Plan a Story</h1>
+            <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Starting Location</span>
+            </div>
+            <input type="text" name="starting-location">
+            </div>
+            <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Ending Location </span>
+            </div>
+            <input type="text" name="ending-location">
+            </div>
+    </div>
 </div>
 <div class="col-1"></div>
+</div>
+
+<div class="jumbotron">
+    <h1>Events</h1>
+    <a class="btn btn-primary" role="button" id="add_event">Add Another Event</a>
+    <a class="btn btn-danger" role="button" id="remove_event">Remove Last Event</a>
+    <form id="event-form">
+    </form>
+</div>
+
+<div class="jumbotron">
+    <h1>Target</h1>
 </div>
 
 <div class="row">
 <div class="col-1"></div>
 <div class="col-10">
-<div class="jumbotron jumbotron-fluid">
-    <div class="container">
-        <h1 class="display-4">What is it?</h1>
-        <p class="lead">Timespent's goal is to help people find activities that suit their interests. Have you ever wanted to meet a friend or go on a date, but not been able to find something that everyone involved wants to do? Timespent solves that problem by learning what types of things interest you and your friends and are within your budget.</p>
+    <div class="jumbotron">
+        <h1>Testing</h1>
+        <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </div>
-</div>
 </div>
 <div class="col-1"></div>
 </div>
 
+<script type="text/javascript">
+function geocoderCallback(results, status) {
+    if (status != 'OK') {
+        console.log("Geocode failed because " + status);
+        return null;
+    }
+    
+    return results[0].geometry.location;
+}
+
+$(function() {
+    var delay = (function() {
+        var timer = 0;
+        return function(callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
+    var updateMapSize = function() {
+        $('div#map').css('height', $('div#next-to-map').css('height'));
+        $('div#map').css('width', $('div#next-to-map').css('width'));
+    }
+
+    $(document).ready(function() {
+        console.log("loaded");
+        num_events = 0;
+        updateMapSize();
+    });
+    $(window).resize(function() {
+        console.log("resize");
+        updateMapSize();
+    });
+
+    $('input[name="starting-location"]').bind('keyup', function() {
+        delay(function() {
+            var start_add = $("input[name='starting-location']").val();
+            if (start_add) {            
+                geocoder.geocode({'address': start_add}, function(results, status) {
+                    var response = geocoderCallback(results, status);
+                    if (response) {
+                        console.log("Found coords ", response, " for ", start_add);
+                        starting_marker.setPosition(response);
+                        updateBounds();
+                    }
+                });
+            }
+        }, 500);
+    });
+
+    $('input[name="ending-location"]').bind('keyup', function() {
+        delay(function() {
+            var end_add = $("input[name='ending-location']").val();
+            if (end_add) {            
+                geocoder.geocode({'address': end_add}, function(results, status) {
+                    var response = geocoderCallback(results, status);
+                    if (response) {
+                        console.log("Found coords ", response, " for ", end_add);
+                        ending_marker.setPosition(response);
+                        updateBounds();
+                    }
+                });
+            }
+        }, 500);
+    });
+
+    $('a#add_event').bind('click', function() {
+        num_events++;
+        $('<input>').attr({
+            type: 'text',
+            id: 'event' + num_events,
+        }).appendTo('form#event-form');
+        console.log('added input', num_events);
+    });
+
+    $('a#remove_event').bind('click', function() {
+        if (num_events > 0){        
+            $('input#event' + num_events).remove();
+            console.log('removed input', num_events);
+            num_events--;
+        }
+    });
+});
+
+</script>
+
+<script>
+var geocoder;
+var map;
+var start_coords;
+var end_coords;
+var starting_marker;
+var ending_marker;
+var num_events;
+
+function updateBounds() {
+    var bounds = new google.maps.LatLngBounds();
+    var starting_bounds = starting_marker.getPosition();
+    var ending_bounds = ending_marker.getPosition();
+    if (starting_bounds) {
+        bounds.extend(starting_marker.getPosition());
+    }
+    if (ending_bounds) {
+        bounds.extend(ending_marker.getPosition());
+    }
+    map.fitBounds(bounds);
+}
+
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {zoom: 4, center: {lat: 35, lng: 240}});
+
+    geocoder = new google.maps.Geocoder();
+    starting_marker = new google.maps.Marker({
+        map: map
+    });
+    ending_marker = new google.maps.Marker({
+        map: map
+    });
+}
+
+function displayDirections() {
+    var request = {
+        origin: start_coords,
+        destination: end_coords,
+        travelMode: google.maps.TravelMode["DRIVING"]
+    }
+    directionsService.route(request, function(response, status) {
+        if (status == 'OK') {
+            directionsDisplay.setDirections(response);
+        }
+    });
+}
+</script>
 
 {% endblock %}
