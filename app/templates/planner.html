@@ -1,55 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-<style>
-
-html, body, {
-    position:fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-.map {
-    border-radius: 10px;
-}
-
-
-.row {
-    padding-left: 20px;
-    padding-bottom: 10px;
-    background-color: white;
-    padding-top: 10px;
-    display: flex;
-}
-
-/* Create two equal columns that sits next to each other */
-.column1 {
-    border-radius: 10px;
-    background-color: #D3D3D3;
-    
-
-    margin: auto;
-    position: relative;
-}
-
-.column2 {
-    flex: 50%;
-    border-radius: 10px;
-    background-color: white;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-left: 10px;
-}
-
-</style>
-
 <script>
 var geocoder;
 var map;
@@ -103,19 +54,21 @@ function displayDirections() {
 }
 </script>
    
+<div class="container-fluid">
 <div class="row">
-    <div class="column1">
+    <div class="col-sm">
         <div id="map" style="height: 680px; width: 680px;">
             <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC94G_D29MnwKOepVNsTOqfu99PYtlcuAU&callback=initMap">
             </script>
         </div>
     </div>
-    <div class="column2">
+    <div class="col-sm">
         <font size="+4">This is bigger text</font>
         <font size="+3">This is bigger text</font>
         <font size="+2">This is bigger text</font>
     </div>
+</div>
 </div>
 
 {% endblock %}
